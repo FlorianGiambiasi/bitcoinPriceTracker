@@ -1,17 +1,25 @@
 const url = 'https://blockchain.info/ticker';
 
-let requete = new XMLHttpRequest();
-requete.open('GET','url');
+function checkPrice() {
+  // Créer une requête
+  let requete = new XMLHttpRequest(); // Créer un objet
+  requete.open('GET', url); // Premier paramètre GET / POST, deuxième paramètr : url
+  requete.responseType = 'json'; // Nous attendons du JSON
+  requete.send(); // Nous envoyons notre requête
 
-requete.responseType = 'json';
-
-requete.send();
-
-requete.onload = function() {
+  // Dèss qu'on reçoit une réponse, cette fonction est executée
+  requete.onload = function() {
     if (requete.readyState === XMLHttpRequest.DONE) {
-        if (requete.status === 200) {
-            let response = requete.response;
-            console.log(response);
-        }
+      if (requete.status === 200) {
+        let reponse = requete.response; // on stock la réponse
+        let usdPrice = reponse.USD.last;
+        document.querySelector('#price_label').textContent = usdPrice;
+      }
+      else {
+        alert('Un problème est intervenu, merci de revenir plus tard.');
+      }
     }
+  }
 }
+
+setInterval(checkPrice, 1000);
